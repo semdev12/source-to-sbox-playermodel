@@ -3,7 +3,7 @@ bl_info = {
     "author": "Your Name",
     "version": (2, 1, 0),
     "blender": (3, 0, 0),
-    "location": "View3D > Sidebar > Valve Tools",
+    "location": "View3D > Sidebar > S&Box PM Tools",
     "description": "Tools for Source to S&box armature adaptation with pose transfer and vertex group management",
     "category": "Rigging",
 }
@@ -106,6 +106,9 @@ VERTEX_GROUP_RENAME_MAP = {
     "ValveBiped.Bip01_R_Elbow": "arm_lower_R_twist1",
     "ValveBiped.Bip01_L_Ulna": "arm_lower_L_twist2",
     "ValveBiped.Bip01_R_Ulna": "arm_lower_R_twist2",
+
+    "ValveBiped.Anim_Attachment_RH" : "hold_R",
+    "ValveBiped.Anim_Attachment_LH" : "hold_L",
     
     # Add more mappings as needed...
 }
@@ -117,7 +120,7 @@ VERTEX_GROUP_RENAME_MAP = {
 class VALVE_OT_adapt_source_armature(Operator):
     """Copy pose from adaptation armature to current, then change modifier target and apply"""
     bl_idname = "valve.adapt_source_armature"
-    bl_label = "Adapt Source Armature"
+    bl_label = "Adapt Source Armature (Experimental)"
     bl_options = {'REGISTER', 'UNDO'}
     
     @classmethod
@@ -341,45 +344,6 @@ class VALVE_OT_fix_foot_vertex_groups(Operator):
         return {'FINISHED'}
 
 
-class VALVE_OT_fix_bone_roll(Operator):
-    """Subtract 90 degrees from all bone rolls in the selected armature"""
-    bl_idname = "valve.fix_bone_roll"
-    bl_label = "Fix Bone Rolls (-90°)"
-    bl_options = {'REGISTER', 'UNDO'}
-    
-    @classmethod
-    def poll(cls, context):
-        return (context.active_object is not None and 
-                context.active_object.type == 'ARMATURE')
-    
-    def execute(self, context):
-        armature = context.active_object
-        
-        # Store current mode
-        original_mode = context.mode
-        
-        # Switch to Edit Mode to modify bone rolls
-        bpy.ops.object.mode_set(mode='EDIT')
-        
-        import math
-        
-        # Get all edit bones
-        edit_bones = armature.data.edit_bones
-        
-        # Subtract 90 degrees (in radians) from each bone's roll
-        bones_modified = 0
-        for bone in edit_bones:
-            old_roll = bone.roll
-            bone.roll = bone.roll - math.radians(90)
-            bones_modified += 1
-            print(f"Bone '{bone.name}': Roll changed from {math.degrees(old_roll):.2f}° to {math.degrees(bone.roll):.2f}°")
-        
-        # Return to original mode
-        bpy.ops.object.mode_set(mode=original_mode.replace('_EDIT', '').replace('_POSE', '').replace('_PAINT', ''))
-        
-        self.report({'INFO'}, f"Modified roll for {bones_modified} bones")
-        return {'FINISHED'}
-
 
 # ============================================
 # UI PANEL
@@ -387,11 +351,11 @@ class VALVE_OT_fix_bone_roll(Operator):
 
 class VALVE_PT_tools_panel(Panel):
     """Creates a Panel in the 3D viewport sidebar"""
-    bl_label = "Valve Bones Tools"
+    bl_label = "S&Box Playermodel Tools"
     bl_idname = "VALVE_PT_tools_panel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "Valve Tools"
+    bl_category = "S&Box Tools"
     
     def draw(self, context):
         layout = self.layout
@@ -449,10 +413,6 @@ class VALVE_PT_tools_panel(Panel):
         row = col.row(align=True)
         row.operator("valve.fix_foot_vertex_groups", icon='MOD_VERTEX_WEIGHT')
         
-        # Bone Roll Fixing Section
-        box = layout.box()
-        box.label(text="Bone Roll Fixing", icon='BONE_DATA')
-        
         col = box.column()
         
         # Show info about selected armature
@@ -465,21 +425,6 @@ class VALVE_PT_tools_panel(Panel):
                 col.label(text="Select an armature", icon='INFO')
         else:
             col.label(text="No object selected", icon='INFO')
-        
-        col.separator()
-        col.operator("valve.fix_bone_roll", icon='DRIVER_ROTATIONAL_DIFFERENCE')
-        
-        # Instructions
-        layout.separator()
-        box = layout.box()
-        box.label(text="Workflow:", icon='QUESTION')
-        box.scale_y = 0.9
-        col = box.column(align=True)
-        col.label(text="1. Select mesh with Source armature")
-        col.label(text="2. Click 'Adapt Source Armature'")
-        col.label(text="3. Click 'Rename Vertex Groups'")
-        col.label(text="4. Click 'Fix Foot Vertex Groups'")
-        col.label(text="5. Select armature, fix bone rolls if needed")
 
 
 # ============================================
