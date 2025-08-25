@@ -1,4 +1,4 @@
-# source-to-sbox-playermodel
+# Source/Gmod To S&Box Playermodel Utilities (BETA)
 Utilities to transition a Source/Gmod playermodel into S&amp;box
 
 This repo allows you to turn a playermodel from Gmod or any Source Engine game into a playermodel compatible with the Player Controller and the default citizen/citizen_human models from S&box through bone merging.
@@ -16,7 +16,8 @@ This works with male armatures so far. Female armatures don't pose properly yet.
 
 ## Quick Guide (using the provided .blend file)
 - import .mdl with SourceIO
-    - if the model has multiple meshes, it's probably best to join them together (Ctrl-J)
+    - <img height="350" alt="image" src="https://github.com/user-attachments/assets/9509753f-8e7a-478e-a15d-3c82a08fbe64" />
+    - if the model has multiple meshes, it's probably best to join them together (Ctrl+J)
 - scale the armature to match the S&box armature (I noticed scaling by 50 always works well)
 - Apply Scale (Ctrl+A -> Scale)
 - Switch the target of the Source mesh's Armature modifier to "*SourceToSbox_AdaptationArmature*"
