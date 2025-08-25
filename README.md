@@ -26,11 +26,7 @@ This works with male armatures so far. Female armatures don't pose properly yet.
 
 - Apply the armature modifier
 - Rename every vertex group in the Source mesh to match the S&box bones naming convention
-  - My python script comes with a "Rename Vertex Groups" button which automates this for you:
-  - Click the Source Mesh
-  - Press N and click on "Valve Tools"
-  - Press "Rename Vertex Groups"
-  - All the Source vertex groups ("ValveBiped.Bip01_*") will be converted for s&box
+  - My python script comes with a "Rename Vertex Groups" button in the sidebar which automates this for you:
 - Use Weight Mix modifier to fix spine issues
   - Because the S&box's rig uses 3 spine bones and Source playermodels use 4, you're gonna have to merge the weights of 2 vertex groups and delete one of them
   - For example ValveBiped.Bip01_Spine2 with ValveBiped.Bip01_Spine4 and then delete Spine4
@@ -44,10 +40,11 @@ This works with male armatures so far. Female armatures don't pose properly yet.
 ## Use in S&box
 - Import the .fbx in your project and create the .vmdl
 - Drop a Player Controller on your scene that uses the citizen_human.vmdl
-- Drag and drop your playermodel .vmdl in your scene
+- Drag and drop the playermodel .vmdl in your scene
 - On the SkinnedModelRenderer, change the "Bone Merge Target" to the Player Controller's "Body" gameobject
-- Disable rendering of the default Player Controller's playermodel by changing its Tint to a color with alpha at 0
-- <img width="427" height="254" alt="image" src="https://github.com/user-attachments/assets/1ab0ef12-8c86-4405-a10b-ad2bf169d0ff" />
+- Disable rendering of the default Player Controller's playermodel by changing its Tint to a color with alpha at 0 or by disabling "Game" on the "Advanced Rendering" section
+- <img width="425" height="421" alt="image" src="https://github.com/user-attachments/assets/c4fa117f-1eeb-4b75-90d4-1952bdcd2303" />
+
 
 
 
